@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+
+<style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0" demote-non-dropping-particle="sort-only" default-locale="it-IT">
+  <info>
+    <title>Tribelon Journal</title>
+    <id>http://www.zotero.org/styles/tribelon-journal</id>
+    <link href="http://www.zotero.org/styles/tribelon-journal" rel="self"/>
+    <link href="https://riviste.fupress.net/index.php/tribelon/libraryFiles/downloadPublic/44" rel="documentation"/>
+    <author>
+      <name>Marco Filippucci</name>
+    </author>
+    <category citation-format="note"/>
+    <category field="architecture"/>
+    <updated>2026-10-31T00:00:00+00:00</updated>
+    <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
+  </info>
+
+
+  <locale xml:lang="it">
+    <terms>
+      <term name="page" form="short">
+        <single>p.</single>
+        <multiple>pp.</multiple>
+      </term>
+      <term name="editor" form="short">a cura di</term>
+      <term name="cited">cit.</term>
+      <term name="ibid">Ibid.</term>
+      <term name="ibid" form="short">Ivi</term>
+    </terms>
+  </locale>
+
+
+  <!-- MACRO PER AUTORI IN NOTA -->
+  <macro name="author-note">
+    <names variable="author">
+      <name form="short" delimiter=", " initialize-with="."/>
+      <substitute>
+        <names variable="editor"/>
+        <text variable="title" font-style="italic"/>
+      </substitute>
+    </names>
+  </macro>
+
+
+  <!-- MACRO PER AUTORI IN BIBLIOGRAFIA -->
+  <macro name="author-bib">
+    <names variable="author">
+      <name name-as-sort-order="first" initialize-with=". " delimiter=", " delimiter-precedes-last="always"/>
+      <label form="short" prefix=" (" suffix=")" text-case="lowercase"/>
+      <substitute>
+        <names variable="editor">
+          <name name-as-sort-order="first" initialize-with=". " delimiter=", "/>
+          <label form="short" prefix=" (" suffix=")"/>
+        </names>
+        <text variable="title" font-style="italic"/>
+      </substitute>
+    </names>
+  </macro>
+
+
+  <!-- MACRO TITOLO BREVE -->
+  <macro name="title-short">
+    <text variable="title" form="short" font-style="italic"/>
+  </macro>
+
+
+  <!-- CITAZIONE IN NOTA -->
+  <citation et-al-min="4" et-al-use-first="1">
+    <layout delimiter="; " suffix=".">
+      <choose>
+        <if position="first">
+          <group delimiter=", ">
+            <text macro="author-note"/>
+            <text macro="title-short"/>
+            <group delimiter=" ">
+              <label variable="page" form="short"/>
+              <text variable="locator"/>
+            </group>
+          </group>
+        </if>
+        <else-if position="ibid-with-locator">
+          <group delimiter=", ">
+            <text term="ibid" form="short"/>
+            <group delimiter=" ">
+              <label variable="page" form="short"/>
+              <text variable="locator"/>
+            </group>
+          </group>
+        </else-if>
+        <else-if position="ibid">
+          <text term="ibid" font-style="italic"/>
+        </else-if>
+        <else>
+          <group delimiter=", ">
+            <text macro="author-note"/>
+            <text macro="title-short"/>
+            <text term="cited"/>
+            <group delimiter=" ">
+              <label variable="page" form="short"/>
+              <text variable="locator"/>
+            </group>
+          </group>
+        </else>
+      </choose>
+    </layout>
+  </citation>
+
+
+  <!-- BIBLIOGRAFIA COMPLETA -->
+  <bibliography et-al-min="4" et-al-use-first="1" hanging-indent="true">
+    <sort>
+      <key macro="author-bib"/>
+      <key variable="issued"/>
+      <key variable="title"/>
+    </sort>
+    <layout suffix=".">
+      <group delimiter=", ">
+        <text macro="author-bib"/>
+        <text variable="title" font-style="italic"/>
+        
+        <choose>
+          <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
+            <group delimiter=" ">
+              <text variable="publisher"/>
+              <text variable="publisher-place"/>
+              <date variable="issued">
+                <date-part name="year"/>
+              </date>
+            </group>
+          </if>
+
+
+          <else-if type="chapter paper-conference" match="any">
+            <group delimiter=" ">
+              <text term="in"/>
+              <names variable="editor">
+                <name initialize-with=". " delimiter=", "/>
+                <label form="short" prefix=" (" suffix=")"/>
+              </names>
+              <text variable="container-title" font-style="italic"/>
+            </group>
+            <group delimiter=" ">
+              <text variable="publisher"/>
+              <text variable="publisher-place"/>
+              <date variable="issued">
+                <date-part name="year"/>
+              </date>
+            </group>
+          </else-if>
+
+
+          <else-if type="article-journal" match="any">
+            <group delimiter=" ">
+              <text term="in"/>
+              <text variable="container-title" font-style="italic"/>
+            </group>
+            <text variable="volume"/>
+            <date variable="issued">
+              <date-part name="year"/>
+            </date>
+            <text variable="issue"/>
+          </else-if>
+
+
+          <else>
+            <group delimiter=" ">
+              <text variable="publisher"/>
+              <text variable="publisher-place"/>
+              <date variable="issued">
+                <date-part name="year"/>
+              </date>
+            </group>
+          </else>
+        </choose>
+
+
+        <group delimiter=" ">
+          <label variable="page" form="short"/>
+          <text variable="page"/>
+        </group>
+      </group>
+    </layout>
+  </bibliography>
+</style>

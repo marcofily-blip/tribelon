@@ -1,116 +1,149 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0" demote-non-dropping-particle="sort-only" default-locale="it-IT">
   <info>
-    <title>Tribelon Journal</title>
-    <id>http://www.zotero.org/styles/tribelon-journalmf</id>
-    <link href="http://www.zotero.org/styles/tribelon-journal" rel="self"/>
+    <title>Tribelon Journal (MF)</title>
+    <id>http://www.zotero.org/styles/tribelon-journalmf-2</id>
+    <link href="http://www.zotero.org/styles/tribelon-journalmf-2" rel="self"/>
     <link href="https://riviste.fupress.net/index.php/tribelon/libraryFiles/downloadPublic/44" rel="documentation"/>
     <author>
       <name>Marco Filippucci</name>
     </author>
     <category citation-format="note"/>
     <category field="generic-base"/>
-    <updated>2026-10-31T00:00:00+00:00</updated>
+    <summary>Note a piè di pagina in forma abbreviata (Autore, Titolo, p.), Ibid./Ivi/cit., bibliografia estesa secondo le Norme editoriali di TRIBELON Journal.</summary>
+    <updated>2026-11-02T00:00:00+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
 
   <locale xml:lang="it">
     <terms>
-      <term name="page" form="short">
-        <single>p.</single>
-        <multiple>pp.</multiple>
+      <term name="editor" form="short">
+        <single>a cura di</single>
+        <multiple>a cura di</multiple>
       </term>
-      <term name="editor" form="short">a cura di</term>
-      <term name="cited">cit.</term>
-      <term name="ibid">Ibid.</term>
-      <term name="ibid" form="short">Ivi</term>
     </terms>
   </locale>
 
-  <!-- MACRO PER AUTORI IN NOTA -->
+  <!-- AUTORE IN NOTA: solo cognome (curatore se manca l'autore) -->
   <macro name="author-note">
     <names variable="author">
-      <name form="short" delimiter=", " initialize-with="."/>
+      <name form="short" delimiter=", "/>
       <substitute>
         <names variable="editor"/>
-        <text variable="title" font-style="italic"/>
       </substitute>
     </names>
   </macro>
 
-  <!-- MACRO PER AUTORI IN BIBLIOGRAFIA -->
+  <!-- TITOLO IN NOTA: completo alla prima citazione, abbreviato nelle successive (cit.) -->
+  <macro name="title-note">
+    <choose>
+      <if position="first">
+        <text variable="title" font-style="italic"/>
+      </if>
+      <else>
+        <text variable="title" form="short" font-style="italic"/>
+      </else>
+    </choose>
+  </macro>
+
+  <!-- PAGINE IN NOTA (p. / pp.) -->
+  <macro name="locator-note">
+    <group delimiter=" ">
+      <label variable="locator" form="short"/>
+      <text variable="locator"/>
+    </group>
+  </macro>
+
+  <!-- AUTORE IN BIBLIOGRAFIA: G. Cera (iniziale puntata + cognome) -->
   <macro name="author-bib">
     <names variable="author">
-      <name name-as-sort-order="first" initialize-with=". " delimiter=", " delimiter-precedes-last="always"/>
-      <label form="short" prefix=" (" suffix=")" text-case="lowercase"/>
+      <name initialize-with=". " delimiter=", "/>
       <substitute>
         <names variable="editor">
-          <name name-as-sort-order="first" initialize-with=". " delimiter=", "/>
+          <name initialize-with=". " delimiter=", "/>
           <label form="short" prefix=" (" suffix=")"/>
         </names>
-        <text variable="title" font-style="italic"/>
       </substitute>
     </names>
   </macro>
 
-  <!-- MACRO TITOLO BREVE -->
-  <macro name="title-short">
-    <text variable="title" form="short" font-style="italic"/>
+  <!-- CHIAVE DI ORDINAMENTO: cognome, nome -->
+  <macro name="author-sort">
+    <names variable="author">
+      <name name-as-sort-order="all" form="long"/>
+      <substitute>
+        <names variable="editor"/>
+        <text variable="title"/>
+      </substitute>
+    </names>
   </macro>
 
-  <!-- CITAZIONE IN NOTA -->
+  <!-- IN S. Settis (a cura di), Titolo del volume -->
+  <macro name="container-bib">
+    <group delimiter=" ">
+      <text term="in"/>
+      <group delimiter=", ">
+        <names variable="editor">
+          <name initialize-with=". " delimiter=", "/>
+          <label form="short" prefix=" (" suffix=")"/>
+        </names>
+        <text variable="container-title" font-style="italic"/>
+      </group>
+    </group>
+  </macro>
+
+  <!-- Casa editrice, Luogo Anno (con numero di edizione a esponente) -->
+  <macro name="publication-bib">
+    <group delimiter=", ">
+      <text variable="publisher"/>
+      <group delimiter=" ">
+        <text variable="publisher-place"/>
+        <group>
+          <date variable="issued">
+            <date-part name="year"/>
+          </date>
+          <number variable="edition" vertical-align="sup"/>
+        </group>
+      </group>
+    </group>
+  </macro>
+
+  <!-- NOTE A PIÈ DI PAGINA -->
   <citation et-al-min="4" et-al-use-first="1">
     <layout delimiter="; " suffix=".">
       <choose>
-        <if position="first">
+        <if position="ibid-with-locator">
           <group delimiter=", ">
-            <text macro="author-note"/>
-            <text macro="title-short"/>
-            <choose>
-              <if type="article-journal chapter paper-conference" match="any">
-                <text variable="container-title" font-style="italic"/>
-              </if>
-            </choose>
-            <date variable="issued">
-              <date-part name="year"/>
-            </date>
-            <group delimiter=" ">
-              <label variable="page" form="short"/>
-              <text variable="locator"/>
-            </group>
+            <text value="Ivi"/>
+            <text macro="locator-note"/>
           </group>
         </if>
-        <else-if position="ibid-with-locator">
-          <group delimiter=", ">
-            <text term="ibid" form="short"/>
-            <group delimiter=" ">
-              <label variable="page" form="short"/>
-              <text variable="locator"/>
-            </group>
-          </group>
-        </else-if>
         <else-if position="ibid">
-          <text term="ibid" font-style="italic"/>
+          <text value="Ibid." font-style="italic"/>
+        </else-if>
+        <else-if position="subsequent">
+          <group delimiter=", ">
+            <text macro="author-note"/>
+            <text macro="title-note"/>
+            <text value="cit."/>
+            <text macro="locator-note"/>
+          </group>
         </else-if>
         <else>
           <group delimiter=", ">
             <text macro="author-note"/>
-            <text macro="title-short"/>
-            <text term="cited"/>
-            <group delimiter=" ">
-              <label variable="page" form="short"/>
-              <text variable="locator"/>
-            </group>
+            <text macro="title-note"/>
+            <text macro="locator-note"/>
           </group>
         </else>
       </choose>
     </layout>
   </citation>
 
-  <!-- BIBLIOGRAFIA COMPLETA -->
+  <!-- BIBLIOGRAFIA -->
   <bibliography et-al-min="4" et-al-use-first="1" hanging-indent="true">
     <sort>
-      <key macro="author-bib"/>
+      <key macro="author-sort"/>
       <key variable="issued"/>
       <key variable="title"/>
     </sort>
@@ -118,59 +151,30 @@
       <group delimiter=", ">
         <text macro="author-bib"/>
         <text variable="title" font-style="italic"/>
-        
         <choose>
-          <if type="bill book graphic legal_case legislation motion_picture report song" match="any">
-            <group delimiter=" ">
-              <text variable="publisher"/>
-              <text variable="publisher-place"/>
-              <date variable="issued">
-                <date-part name="year"/>
-              </date>
-            </group>
+          <if type="chapter paper-conference entry-encyclopedia entry-dictionary" match="any">
+            <text macro="container-bib"/>
+            <text macro="publication-bib"/>
           </if>
-
-          <else-if type="chapter paper-conference" match="any">
-            <group delimiter=" ">
-              <text term="in"/>
-              <names variable="editor">
-                <name initialize-with=". " delimiter=", "/>
-                <label form="short" prefix=" (" suffix=")"/>
-              </names>
-              <text variable="container-title" font-style="italic"/>
-            </group>
-            <group delimiter=" ">
-              <text variable="publisher"/>
-              <text variable="publisher-place"/>
-              <date variable="issued">
-                <date-part name="year"/>
-              </date>
-            </group>
-          </else-if>
-
           <else-if type="article-journal" match="any">
             <group delimiter=" ">
               <text term="in"/>
               <text variable="container-title" font-style="italic"/>
             </group>
-            <text variable="volume"/>
+            <number variable="volume" form="roman" text-case="uppercase"/>
             <date variable="issued">
               <date-part name="year"/>
             </date>
             <text variable="issue"/>
           </else-if>
-
           <else>
             <group delimiter=" ">
-              <text variable="publisher"/>
-              <text variable="publisher-place"/>
-              <date variable="issued">
-                <date-part name="year"/>
-              </date>
+              <text variable="number-of-volumes"/>
+              <label variable="number-of-volumes" form="short" plural="always"/>
             </group>
+            <text macro="publication-bib"/>
           </else>
         </choose>
-
         <group delimiter=" ">
           <label variable="page" form="short"/>
           <text variable="page"/>
